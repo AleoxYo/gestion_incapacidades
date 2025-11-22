@@ -1,0 +1,55 @@
+/* Reseteo básico */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Estilo base del body */
+body {
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background-color: #020617; /* fondo neutro oscuro */
+  color: #e5e7eb;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Inputs, selects y botones básicos (los estilos inline los sobreescriben) */
+input,
+select,
+button,
+textarea {
+  font: inherit;
+}
+
+/* Botones: comportamiento básico */
+button {
+  cursor: pointer;
+  border: none;
+}
+
+/* Clase .card genérica, usada donde aún no tenemos estilos inline */
+.card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 16px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.1);
+  color: #0f172a;
+}
+
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}

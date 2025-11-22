@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Estado {
+  REGISTRADA
+  EN_REVISION
+  APROBADA
+  RECHAZADA
+}
+
+enum Tipo {
+  EPS
+  ARL
+  PARTICULAR
+}
+
+enum DocTipo {
+  CERTIFICADO
+  EPICRISIS
+  OTRO
+}
+
+enum Rol {
+  COLABORADOR
+  ANALISTA
+  ADMIN
+}
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  nombre    String
+  password  String   // hash bcrypt
+  rol       Rol      @default(COLABORADOR)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Incapacidad {
+  id              Int        @id @default(autoincrement())
+  colaborador     String
+  // NUEVOS (opcionales en BD por compatibilidad)
+  pacienteNombre  String?
+  pacienteDocumento String?
+
+  tipo         Tipo
+  fechaInicio  DateTime
+  dias         Int
+  entidad      String?
+  estado       Estado     @default(REGISTRADA)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  bitacora     Bitacora[]
+  documentos   Documento[]
+}
+
+model Documento {
+  id            Int          @id @default(autoincrement())
+  incapacidadId Int
+  tipo          DocTipo      @default(OTRO)
+  nombreOriginal String
+  mime          String
+  size          Int
+  path          String       // ruta local (p. ej. "uploads/2025/10/abc.pdf")
+  uploadedAt    DateTime     @default(now())
+
+  Incapacidad   Incapacidad  @relation(fields: [incapacidadId], references: [id], onDelete: Cascade)
+
+  @@index([incapacidadId])
+}
+
+model Bitacora {
+  id            Int          @id @default(autoincrement())
+  incapacidadId Int
+  accion        String       // p.ej. "CREAR", "CAMBIAR_ESTADO"
+  detalle       String?
+  createdAt     DateTime     @default(now())
+
+  Incapacidad   Incapacidad  @relation(fields: [incapacidadId], references: [id], onDelete: Cascade)
+
+  @@index([incapacidadId])
+}
+
